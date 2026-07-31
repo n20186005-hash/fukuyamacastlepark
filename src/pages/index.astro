@@ -1,0 +1,731 @@
+---
+import SectionTitle from '../components/SectionTitle.astro';
+import ArrowIcon from '../components/ArrowIcon.astro';
+import '../styles/global.css';
+
+const pageTitle = '福山城公園｜駅前、五分。四百年の城へ。';
+const pageDescription = 'JR福山駅北口から徒歩約5分。福山城公園の見どころ、開園・博物館情報、周辺グルメ、詳しい交通、周辺スポット、端末内だけで作れる記念カードをまとめた非公式ガイド。';
+const mapsUrl = 'https://www.google.com/maps/place/Fukuyama+Castle+Park/data=!4m7!3m6!1s0x355110e4e170c8e3:0xbb00949ae035b0aa!8m2!3d34.4904281!4d133.3614081!16s%2Fg%2F1tfpgmgn!19sChIJ48hw4eQQUTURqrA14JqUALs?authuser=0&hl=ja&rclk=1';
+const officialUrl = 'https://fukuyamajo.jp/';
+
+const foods = [
+  {
+    type: '郷土料理',
+    title: 'うずみ',
+    text: '具をご飯の下に「埋める」福山の郷土料理。やさしいだしと、鯛・海老・野菜などの具を一緒に味わいます。',
+    where: '駅周辺の郷土料理店で'
+  },
+  {
+    type: '備後の麺',
+    title: '尾道ラーメン',
+    text: '醤油を軸にした瀬戸内らしい一杯。短い滞在でも立ち寄りやすく、城歩きの前後に選びやすい味です。',
+    where: '福山駅南口側で探す'
+  },
+  {
+    type: '瀬戸内の味',
+    title: '鯛と小魚',
+    text: '鞆の浦を抱える福山では、鯛料理や小魚、季節の魚介も旅の主役。昼膳から居酒屋まで幅広く楽しめます。',
+    where: '元町・船町の和食店へ'
+  },
+  {
+    type: '備後の粉もの',
+    title: '府中焼き',
+    text: 'ミンチ肉を使い、表面を香ばしく焼き上げる備後エリアのご当地お好み焼き。熱々を鉄板でどうぞ。',
+    where: '駅周辺・市街地で'
+  }
+];
+
+const nearby = [
+  {
+    image: '/images/sanzoinari-shrine.jpg',
+    width: 1280,
+    height: 853,
+    alt: '三蔵稲荷神社の社殿',
+    time: '城内・徒歩すぐ',
+    title: '三蔵稲荷神社',
+    text: '福山城の北側に鎮座。城郭の石垣と神社の朱が重なる、静かな寄り道です。',
+    tag: '城とあわせて参拝'
+  },
+  {
+    image: '/images/fukuyama-castle-park.jpg',
+    width: 1280,
+    height: 720,
+    alt: '福山城の石垣と天守',
+    time: '徒歩約3〜5分',
+    title: 'ふくやま美術館',
+    text: '城の西側、文化ゾーンにある美術館。庭越しに城を望む時間も楽しめます。',
+    tag: '雨の日にも組みやすい'
+  },
+  {
+    image: '/images/fukuyama-castle-spring.jpg',
+    width: 1280,
+    height: 719,
+    alt: '春の福山城天守',
+    time: '徒歩約5分',
+    title: '広島県立歴史博物館',
+    text: '草戸千軒町遺跡をはじめ、瀬戸内と備後の歴史を深く知れる文化ゾーンの博物館です。',
+    tag: '城下町の背景を知る'
+  },
+  {
+    image: '/images/fukuyama-station-approach.jpg',
+    width: 1280,
+    height: 960,
+    alt: '福山駅北口から見た福山城',
+    time: '駅前から路線バス',
+    title: '鞆の浦',
+    text: '港町の路地、常夜燈、海景色へ。福山城と組み合わせると、城下と港の一日旅になります。',
+    tag: '半日〜一日コース'
+  }
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'TouristAttraction',
+  name: '福山城公園',
+  alternateName: 'Fukuyama Castle Park',
+  description: pageDescription,
+  address: {
+    '@type': 'PostalAddress',
+    postalCode: '720-0061',
+    addressRegion: '広島県',
+    addressLocality: '福山市',
+    streetAddress: '丸之内一丁目8番'
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: 34.4904281,
+    longitude: 133.3614081
+  },
+  isAccessibleForFree: true
+};
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#171714" />
+    <meta name="description" content={pageDescription} />
+    <meta name="robots" content="index,follow,max-image-preview:large" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={Astro.site ? new URL('/', Astro.site) : undefined} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:image" content={Astro.site ? new URL('/images/fukuyama-castle-sunset.jpg', Astro.site) : '/images/fukuyama-castle-sunset.jpg'} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <title>{pageTitle}</title>
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-HXM22WWPKP"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-HXM22WWPKP');
+    </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="shell site-header__inner">
+        <a class="brand" href="#top" aria-label="福山城公園 トップへ">
+          <span class="brand__mon" aria-hidden="true">福</span>
+          <span>福山城公園</span>
+        </a>
+        <nav class="site-nav" aria-label="ページ内ナビゲーション">
+          <a href="#highlights">見どころ</a>
+          <a href="#food">周辺の味</a>
+          <a href="#access">交通</a>
+          <a href="#nearby">周辺スポット</a>
+          <a class="site-nav__card" href="#memory-card">記念カードを作る</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <img
+          class="hero__image"
+          src="/images/fukuyama-castle-sunset.jpg"
+          alt="夕暮れに浮かぶ福山城天守と石垣"
+          width="3840"
+          height="2160"
+          fetchpriority="high"
+        />
+        <div class="shell hero__content">
+          <div>
+            <p class="hero__kicker">Fukuyama Castle Park · Hiroshima</p>
+            <h1 id="hero-title">
+              駅前、五分。<br />四百年の城へ。
+              <span>福山城公園 — 新幹線から見える城</span>
+            </h1>
+            <p class="hero__lead">
+              福山駅の北口を出ると、石垣の上に天守が現れます。伏見櫓、筋鉄御門、全国でも珍しい天守北側の鉄板張り。短い乗り継ぎ時間にも、じっくり歩く一日にも似合う城です。
+            </p>
+            <div class="hero__actions">
+              <a class="button button--light" href="#access">
+                行き方を見る
+                <ArrowIcon />
+              </a>
+              <a class="button button--ghost" href="#memory-card">
+                写真で記念カードを作る
+              </a>
+            </div>
+          </div>
+          <div class="hero__vertical" aria-hidden="true">
+            <strong>備後国 福山</strong>
+            <small>築城一六二二年</small>
+          </div>
+        </div>
+      </section>
+
+      <aside class="quick-facts" aria-label="訪問の基本情報">
+        <div class="shell quick-facts__grid">
+          <article class="fact">
+            <p class="fact__label">ACCESS</p>
+            <p class="fact__value">福山駅北口<br />徒歩 約5分</p>
+            <p class="fact__note">新幹線・在来線からすぐ</p>
+          </article>
+          <article class="fact">
+            <p class="fact__label">PARK</p>
+            <p class="fact__value">6:00–22:00</p>
+            <p class="fact__note">天守前広場・無休／無料</p>
+          </article>
+          <article class="fact">
+            <p class="fact__label">MUSEUM</p>
+            <p class="fact__value">9:00–17:00</p>
+            <p class="fact__note">最終入館16:30・月曜休館</p>
+          </article>
+          <article class="fact">
+            <p class="fact__label">SEASON</p>
+            <p class="fact__value">桜 約300本</p>
+            <p class="fact__note">春は城郭一帯が華やぐ</p>
+          </article>
+        </div>
+      </aside>
+
+      <section class="section" id="about">
+        <div class="shell">
+          <SectionTitle
+            eyebrow="A CASTLE BESIDE THE STATION"
+            title="列車を降りた瞬間、旅は城下町になる。"
+            description="福山城は、江戸時代初期の1622年に水野勝成が築いた城。山陽新幹線のホームから天守を望める近さと、石垣・櫓・門がつくる重厚な景観が、この場所ならではの魅力です。"
+          />
+
+          <div class="intro-grid reveal">
+            <div class="intro-copy">
+              <p class="intro-copy__lead">白い天守を支える石垣。<br />北面を守る、黒い鉄板。</p>
+              <p>
+                戦災で焼失した天守は1966年に再建され、築城400年を迎えた2022年に外観を改修。天守北側には、かつて砲撃への備えとして施されたとされる鉄板張りが復元されました。
+              </p>
+              <p>
+                伏見城から移されたと伝わる伏見櫓と筋鉄御門は国の重要文化財。天守の展示を巡ったあとは、門の金具、石垣の勾配、城下を見渡す高低差にも目を向けてみてください。
+              </p>
+            </div>
+            <figure class="intro-image">
+              <img
+                src="/images/fukuyama-castle-spring.jpg"
+                alt="桜と青空に映える福山城天守"
+                width="1280"
+                height="719"
+                loading="lazy"
+              />
+              <figcaption>
+                <span>春の天守</span>
+                <span>APRIL · FUKUYAMA</span>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section--ink" id="highlights">
+        <div class="shell">
+          <SectionTitle
+            eyebrow="THREE DETAILS"
+            title="福山城で、見るべき三つ。"
+            description="遠景だけで終わらせず、素材と構造に近づくと、福山城の個性がはっきり見えてきます。"
+            invert
+          />
+
+          <div class="highlights reveal">
+            <article class="highlight">
+              <span class="highlight__number">01</span>
+              <h3>北側の鉄板張り</h3>
+              <p>白い天守の背面に現れる黒い帯。全国的にも珍しい防御の意匠を、北側へ回って確かめます。</p>
+              <span class="highlight__mark" aria-hidden="true">鉄</span>
+            </article>
+            <article class="highlight">
+              <span class="highlight__number">02</span>
+              <h3>伏見櫓と筋鉄御門</h3>
+              <p>伏見城の遺構と伝わる二つの重要文化財。木部、瓦、門扉の鉄金具に時間の厚みが残ります。</p>
+              <span class="highlight__mark" aria-hidden="true">門</span>
+            </article>
+            <article class="highlight">
+              <span class="highlight__number">03</span>
+              <h3>駅と城の近さ</h3>
+              <p>北口から石垣を見上げ、数分で城内へ。鉄道と城郭が一枚の風景に収まる福山らしい眺めです。</p>
+              <span class="highlight__mark" aria-hidden="true">駅</span>
+            </article>
+          </div>
+
+          <div class="timeline reveal" aria-label="福山城の歴史">
+            <article class="timeline__item">
+              <span class="timeline__year">1622</span>
+              <h3>福山城、完成</h3>
+              <p>初代福山藩主・水野勝成が築城。西国の守りを担う大規模な近世城郭となりました。</p>
+            </article>
+            <article class="timeline__item">
+              <span class="timeline__year">1945</span>
+              <h3>天守、戦災で焼失</h3>
+              <p>福山空襲により天守などを焼失。伏見櫓や筋鉄御門は残りました。</p>
+            </article>
+            <article class="timeline__item">
+              <span class="timeline__year">1966</span>
+              <h3>天守を再建</h3>
+              <p>市制50周年を記念して天守を再建。内部は福山城博物館として歩めるようになります。</p>
+            </article>
+            <article class="timeline__item">
+              <span class="timeline__year">2022</span>
+              <h3>築城400年</h3>
+              <p>外観改修と展示刷新を実施。天守北側の鉄板張りが現代に復元されました。</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="scenery">
+        <div class="shell">
+          <SectionTitle
+            eyebrow="SCENES OF THE CASTLE"
+            title="朝、桜、そして夜。"
+            description="駅前の城だから、時間帯を変えて何度でも立ち寄れます。天守の白、石垣の灰、夜の黒。そのコントラストが写真の表情を変えます。"
+          />
+
+          <div class="gallery-grid reveal">
+            <figure class="gallery-card">
+              <img
+                src="/images/fukuyama-castle-park.jpg"
+                alt="木立と石垣越しに望む福山城"
+                width="1280"
+                height="720"
+                loading="lazy"
+              />
+              <figcaption>石垣と木立の奥に立つ天守</figcaption>
+            </figure>
+            <figure class="gallery-card">
+              <img
+                src="/images/fukuyama-castle-spring.jpg"
+                alt="桜越しの福山城天守"
+                width="1280"
+                height="719"
+                loading="lazy"
+              />
+              <figcaption>桜が添える、春の白</figcaption>
+            </figure>
+            <figure class="gallery-card">
+              <img
+                src="/images/fukuyama-castle-night-wall.jpg"
+                alt="夜に照らされた福山城の石垣と城壁"
+                width="3840"
+                height="2160"
+                loading="lazy"
+              />
+              <figcaption>夜、石垣に浮かぶ光</figcaption>
+            </figure>
+          </div>
+
+          <div class="visit-note reveal">
+            <strong>撮るなら、夕方から夜へ。</strong>
+            <p>西日が天守を暖かく染める時間から、城壁が照らされる夜まで滞在すると、一度の訪問で異なる表情を残せます。催事やライトアップ内容は日によって変わるため、訪問当日にご確認ください。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section--paper-pale" id="food">
+        <div class="shell">
+          <SectionTitle
+            eyebrow="TASTE OF FUKUYAMA"
+            title="城歩きのあと、備後を食べる。"
+            description="飲食店が集まるのは主に福山駅南口側。城から駅を抜け、元町・船町方面へ歩くと、郷土料理から麺、瀬戸内の魚まで選択肢が広がります。"
+          />
+
+          <div class="food-grid reveal">
+            {foods.map((food) => (
+              <article class="food-card">
+                <span class="food-card__type">{food.type}</span>
+                <h3>{food.title}</h3>
+                <p>{food.text}</p>
+                <p class="food-card__where">{food.where}</p>
+              </article>
+            ))}
+          </div>
+
+          <div class="food-footer reveal">
+            <p>店舗の営業日・提供メニューは変わります。特に夕食や週末は、当日の営業状況と予約の要否をご確認ください。</p>
+            <a
+              class="button button--dark"
+              href="https://www.google.com/maps/search/?api=1&query=%E7%A6%8F%E5%B1%B1%E9%A7%85+%E9%83%B7%E5%9C%9F%E6%96%99%E7%90%86"
+              target="_blank"
+              rel="noreferrer"
+            >
+              駅周辺で探す
+              <ArrowIcon />
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section--ink" id="access">
+        <div class="shell">
+          <SectionTitle
+            eyebrow="DETAILED ACCESS"
+            title="迷わない。北口を出て、城を目指す。"
+            description="福山城公園は、JR福山駅の北側。新幹線改札・在来線改札から北口へ進み、駅前広場を抜ければ石垣が見えます。"
+            invert
+          />
+
+          <div class="access-layout">
+            <div class="route-list reveal">
+              <article class="route">
+                <div class="route__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="24" height="24">
+                    <path d="M7 17h10M8 20l2-3m6 3-2-3M7 4h10a2 2 0 0 1 2 2v8a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3V6a2 2 0 0 1 2-2Zm0 3h10M8 13h.01M16 13h.01" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.6"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3>山陽新幹線で</h3>
+                  <p>広島・岡山・新大阪方面から<strong>福山駅</strong>へ。改札後は「北口」の案内に沿います。</p>
+                </div>
+              </article>
+              <article class="route">
+                <div class="route__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="24" height="24">
+                    <path d="M4 18h16M6 18V8h12v10M9 18v-5h6v5M5 8l7-5 7 5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3>在来線で</h3>
+                  <p>JR山陽本線・福塩線で<strong>福山駅</strong>下車。北口から地上へ出て、正面の城郭方向へ徒歩約5分です。</p>
+                </div>
+              </article>
+              <article class="route">
+                <div class="route__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="24" height="24">
+                    <path d="M5 17h14l-1-6-2-3H8l-2 3-1 6Zm2 0v2m10-2v2M7 13h10M8 8l1-3h6l1 3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3>車で</h3>
+                  <p>城周辺の<strong>福山城博物館・文学館・美術館などの有料駐車場</strong>を利用。文化ゾーン施設の利用で最初の1時間が無料になる場合があります。</p>
+                </div>
+              </article>
+              <article class="route">
+                <div class="route__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="24" height="24">
+                    <circle cx="9" cy="5" r="2" fill="none" stroke="currentColor" stroke-width="1.6"/>
+                    <path d="m9 8 3 4 4 1m-7-5-2 5-3 3m8-4-1 7m1-7 3 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3>歩きやすさ</h3>
+                  <p>駅からの距離は短い一方、城内には坂・石段・段差があります。車いすやベビーカー利用時は現地の案内表示をご確認ください。</p>
+                </div>
+              </article>
+            </div>
+
+            <div class="access-map reveal">
+              <div class="map-board" role="img" aria-label="JR福山駅北口から福山城公園まで徒歩約5分の概略図">
+                <span class="map-board__north">N ↑</span>
+                <div class="map-castle">
+                  <svg aria-hidden="true" viewBox="0 0 120 90">
+                    <path d="M12 79h96M22 78V58h76v20M30 58V39h60v19M39 39V23h42v16M31 23h58L78 9H42L31 23Z" fill="none" stroke="#171714" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                    <path d="M50 64h20v15H50z" fill="#a64635"/>
+                  </svg>
+                  <strong>福山城公園</strong>
+                </div>
+                <div class="map-walk">徒歩<strong>約5分</strong></div>
+                <div class="map-line"></div>
+                <div class="map-station">JR 福山駅 北口</div>
+                <p class="map-caption">概略図です。工事・催事・バリアフリールートにより入口や動線が変わる場合があります。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="nearby">
+        <div class="shell">
+          <SectionTitle
+            eyebrow="AROUND THE CASTLE"
+            title="城から、文化と港町へ。"
+            description="公園周辺は美術館・歴史博物館が集まる文化ゾーン。時間に余裕があれば、ばらのまち福山の市街地や鞆の浦まで足を延ばせます。"
+          />
+
+          <div class="nearby-grid reveal">
+            {nearby.map((spot) => (
+              <article class="nearby-card">
+                <div class="nearby-card__image">
+                  <img src={spot.image} alt={spot.alt} width={spot.width} height={spot.height} loading="lazy" />
+                </div>
+                <div class="nearby-card__body">
+                  <span class="nearby-card__time">{spot.time}</span>
+                  <h3>{spot.title}</h3>
+                  <p>{spot.text}</p>
+                  <p class="nearby-card__tag">{spot.tag}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+
+          <div class="day-plan reveal">
+            <h3>一日の組み方</h3>
+            <div class="day-plan__steps" aria-label="おすすめモデルコース">
+              <span>09:30 福山城</span><i>→</i>
+              <span>11:30 文化ゾーン</span><i>→</i>
+              <span>13:00 駅南口で昼食</span><i>→</i>
+              <span>14:00 鞆の浦へ</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section--ink" id="memory-card">
+        <div class="shell">
+          <SectionTitle
+            eyebrow="MEMORIAL CARD MAKER"
+            title="今日の一枚を、旅の札に。"
+            description="撮影した写真・自撮り・アルバムの写真を選び、福山城らしい意匠の記念カードを作れます。処理はすべてブラウザ内のCanvasで行います。"
+            invert
+          />
+
+          <div class="card-maker">
+            <div class="card-controls reveal">
+              <div class="privacy-badge">
+                <svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24">
+                  <path d="M7 10V7a5 5 0 0 1 10 0v3m-11 0h12v10H6V10Zm6 4v2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"/>
+                </svg>
+                <div>
+                  <strong>写真はあなたの端末にだけ保存されます</strong>
+                  <p>写真・入力文字・完成画像はアップロードされず、サーバーを経由しません。</p>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <span class="control-label">01 · 写真を選ぶ</span>
+                <div class="photo-actions">
+                  <label class="photo-action" for="cameraPhoto">
+                    <svg aria-hidden="true" viewBox="0 0 24 24">
+                      <path d="M4 8h3l1.5-2h7L17 8h3v11H4V8Zm8 3a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+                    </svg>
+                    写真を撮る
+                  </label>
+                  <input class="sr-only" id="cameraPhoto" data-photo-input type="file" accept="image/*" capture="environment" />
+
+                  <label class="photo-action" for="selfiePhoto">
+                    <svg aria-hidden="true" viewBox="0 0 24 24">
+                      <circle cx="12" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                      <path d="M6 20c.6-4 2.5-6 6-6s5.4 2 6 6M4 4h4M4 4v4M20 4h-4m4 0v4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"/>
+                    </svg>
+                    自撮りする
+                  </label>
+                  <input class="sr-only" id="selfiePhoto" data-photo-input type="file" accept="image/*" capture="user" />
+
+                  <label class="photo-action" for="albumPhoto">
+                    <svg aria-hidden="true" viewBox="0 0 24 24">
+                      <rect x="3" y="5" width="18" height="14" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                      <circle cx="9" cy="10" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                      <path d="m5 17 4-4 3 3 2-2 5 3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+                    </svg>
+                    アルバム
+                  </label>
+                  <input class="sr-only" id="albumPhoto" data-photo-input type="file" accept="image/*" />
+                </div>
+              </div>
+
+              <div class="control-group">
+                <span class="control-label">02 · 文字とサイズ</span>
+                <div class="field-grid">
+                  <div class="field field--full">
+                    <label for="cardTitle">場所名／タイトル</label>
+                    <input id="cardTitle" maxlength="24" value="福山城公園" autocomplete="off" />
+                  </div>
+                  <div class="field">
+                    <label for="cardDate">日付</label>
+                    <input id="cardDate" type="date" />
+                  </div>
+                  <div class="field">
+                    <label for="cardSize">サイズ</label>
+                    <select id="cardSize">
+                      <option value="square">1:1（正方形）</option>
+                      <option value="postcard" selected>はがき縦（100:148）</option>
+                      <option value="story">9:16（ストーリー）</option>
+                    </select>
+                  </div>
+                  <div class="field field--full">
+                    <label for="cardNote">ひとこと</label>
+                    <textarea id="cardNote" maxlength="56">駅前、五分。四百年の城へ。</textarea>
+                  </div>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <span class="control-label">03 · 意匠を選ぶ</span>
+                <div class="style-options">
+                  <label class="style-option">
+                    <input class="sr-only" type="radio" name="cardStyle" value="iron" checked />
+                    鉄黒
+                  </label>
+                  <label class="style-option">
+                    <input class="sr-only" type="radio" name="cardStyle" value="sakura" />
+                    桜霞
+                  </label>
+                  <label class="style-option">
+                    <input class="sr-only" type="radio" name="cardStyle" value="gold" />
+                    金箔
+                  </label>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <span class="control-label">04 · 写真の位置</span>
+                <div class="range-grid">
+                  <div class="range-field">
+                    <label for="photoZoom">拡大</label>
+                    <input id="photoZoom" type="range" min="1" max="2.4" value="1" step="0.02" />
+                  </div>
+                  <div class="range-field">
+                    <label for="photoFocusX">左右</label>
+                    <input id="photoFocusX" type="range" min="0" max="100" value="50" step="1" />
+                  </div>
+                  <div class="range-field">
+                    <label for="photoFocusY">上下</label>
+                    <input id="photoFocusY" type="range" min="0" max="100" value="50" step="1" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="download-row">
+                <button class="button button--gold" id="downloadCard" type="button">
+                  PNGで端末に保存
+                  <ArrowIcon />
+                </button>
+                <small>完成画像にも個人情報は自動で追加されません。</small>
+              </div>
+              <button class="button button--ghost" id="resetCard" type="button">初期状態に戻す</button>
+              <p class="card-status" id="cardStatus" aria-live="polite"></p>
+            </div>
+
+            <div class="card-preview-wrap reveal">
+              <div class="card-preview-shell">
+                <canvas id="memorialCanvas" width="1000" height="1480" aria-label="福山城公園の記念カードプレビュー"></canvas>
+              </div>
+              <div class="card-preview-meta">
+                <span>プレビュー</span>
+                <span id="previewSizeLabel">はがき縦 · 1000 × 1480px</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section--compact section--paper-pale" id="visit-info">
+        <div class="shell">
+          <SectionTitle
+            eyebrow="BEFORE YOU GO"
+            title="公園と博物館は、時間が異なります。"
+            description="公園の天守前広場と、天守内部の福山城博物館は別の利用案内です。入館を予定する場合は、休館日と最終入館時刻にご注意ください。"
+          />
+
+          <div class="visit-info-grid reveal">
+            <article class="visit-info-card">
+              <span class="visit-info-card__label">福山城公園・天守前広場</span>
+              <h3>城外を歩く</h3>
+              <dl>
+                <dt>利用時間</dt><dd>6:00–22:00</dd>
+                <dt>休み</dt><dd>なし</dd>
+                <dt>料金</dt><dd>無料</dd>
+                <dt>目安</dt><dd>30〜60分</dd>
+              </dl>
+            </article>
+            <article class="visit-info-card">
+              <span class="visit-info-card__label">福山城博物館・天守内部</span>
+              <h3>展示と展望を巡る</h3>
+              <dl>
+                <dt>開館</dt><dd>9:00–17:00</dd>
+                <dt>最終入館</dt><dd>16:30</dd>
+                <dt>休館</dt><dd>月曜（祝日の場合は翌日）・12月28〜31日ほか</dd>
+                <dt>一般料金</dt><dd>500円</dd>
+              </dl>
+            </article>
+          </div>
+          <p class="notice reveal">掲載情報は確認時点の内容です。臨時休館、展示替え、催事、料金改定があるため、来訪前に公式案内をご確認ください。</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="shell">
+        <div class="footer-cta">
+          <div>
+            <h2>次の列車まで、城へ。</h2>
+            <p>〒720-0061 広島県福山市丸之内一丁目8番 · JR福山駅北口から徒歩約5分</p>
+          </div>
+          <div class="hero__actions">
+            <a class="button button--light" href={mapsUrl} target="_blank" rel="noreferrer">
+              地図を開く
+              <ArrowIcon />
+            </a>
+            <a class="button button--ghost" href={officialUrl} target="_blank" rel="noreferrer">公式情報を確認</a>
+          </div>
+        </div>
+
+        <div class="footer-main">
+          <div class="footer-brand">福山城公園</div>
+          <nav class="footer-links" aria-label="フッターナビゲーション">
+            <a href="#about">福山城について</a>
+            <a href="#food">周辺の味</a>
+            <a href="#access">交通</a>
+            <a href="#nearby">周辺スポット</a>
+            <a href="#memory-card">記念カード</a>
+          </nav>
+
+          <details class="photo-credits">
+            <summary>写真の出典・ライセンス</summary>
+            <p>
+              “Fukuyama Castle at Sunset” © The Modern Polymath / CC BY-SA 4.0、
+              “Fukuyama Castle wall at night” © Phiteros / CC BY-SA 4.0、
+              “Fukuyama Castle” © The Modern Polymath / CC BY-SA 4.0、
+              “Fukuyama Castle 2025-04” © Editor0206 / CC0 1.0、
+              “Fukuyama Castle seen from Fukuyama station” © John Seb Barber / CC BY 2.0、
+              “Sanzoinari-jinja01s1980” © 663highland / CC BY-SA 3.0 または CC BY 2.5。
+              画像は表示最適化・トリミングを行う場合があります。出典URLと詳細は同梱の PHOTO-CREDITS.md に記載しています。
+            </p>
+          </details>
+        </div>
+      </div>
+      <p class="disclaimer shell">本サイトは福山市、福山城博物館および関係団体が運営する公式サイトではありません。来訪前に必ず公式情報をご確認ください。</p>
+    </footer>
+
+    <script>
+      import '../scripts/memorial-card.ts';
+
+      const revealItems = document.querySelectorAll<HTMLElement>('.reveal');
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+          for (const entry of entries) {
+            if (!entry.isIntersecting) continue;
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        }, { threshold: 0.12 });
+        revealItems.forEach((item) => observer.observe(item));
+      } else {
+        revealItems.forEach((item) => item.classList.add('is-visible'));
+      }
+    </script>
+  </body>
+</html>
