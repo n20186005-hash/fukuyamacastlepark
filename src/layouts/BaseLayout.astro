@@ -1,0 +1,53 @@
+---
+import '../styles/global.css';
+import { localeMeta, hreflangAlternates, pageMeta, type Locale } from '../i18n';
+import { site, gaId } from '../data/site';
+import { buildJsonLd } from '../lib/schema';
+import type { LocaleContent } from '../data/content';
+
+interface Props {
+  locale: Locale;
+  path: string;
+  content: LocaleContent;
+}
+const { locale, path, content } = Astro.props;
+
+const base = Astro.site ? Astro.site.href : `${site.domain}/`;
+const canonical = new URL(path, base).href;
+const meta = pageMeta[locale];
+const alternates = hreflangAlternates(path, base.replace(/\/$/, ''));
+const jsonLd = buildJsonLd(locale, content, canonical);
+const ogLocale = localeMeta[locale].ogLocale;
+const htmlLang = localeMeta[locale].htmlLang;
+const ogImage = new URL(site.ogImage, base).href;
+---
+
+<!doctype html>
+<html lang={htmlLang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#171714" />
+    <meta name="description" content={meta.description} />
+    <meta name="robots" content="index,follow,max-image-preview:large" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={canonical} />
+    {alternates.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content={ogLocale} />
+    <meta property="og:title" content={meta.title} />
+    <meta property="og:description" content={meta.description} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <title>{meta.title}</title>
+    {jsonLd.map((block) => <script type="application/ld+json" set:html={JSON.stringify(block)}></script>)}
+    <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
+      gtag('config', 'G-HXM22WWPKP');
+    </script>
+  </head>
+  <slot />
+</html>

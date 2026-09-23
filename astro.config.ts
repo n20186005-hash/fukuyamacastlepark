@@ -9,6 +9,13 @@ export default defineConfig({
   build: {
     format: 'directory'
   },
+  i18n: {
+    defaultLocale: 'ja',
+    locales: ['ja', 'zh', 'en'],
+    routing: {
+      prefixDefaultLocale: false
+    }
+  },
   vite: {
     plugins: [tailwindcss()]
   }
